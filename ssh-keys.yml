@@ -12,10 +12,10 @@
 
 - name: Exchange SSH Keys
   hosts: nodes
-  user: "{{ ECS_ssh_user }}"
+  user: "{{ ECS.ssh_user }}"
   tasks:
     - set_fact:
         remote_hosts: "{{ groups['all'] | difference(['127.0.0.1', 'localhost']) }}"
 
     - name: Configure ansible authorized key
-      authorized_key: user="{{ ECS_ssh_user }} key="{{ lookup('file', 'work/ansible_rsa.pub') }}" state=present
+      authorized_key: user="{{ ECS.ssh_user }}" key="{{ lookup('file', 'work/ansible_rsa.pub') }}" state=present
