@@ -3,7 +3,7 @@
 Deploy filebeat, metricbeat to ECS nodes, and optionally deploy ecsbeat to a node either in the ECS cluster or somewhere else.
 
 # Setup
-1. Install [Docker](http://docker.io).
+1. Install [Docker](http://docker.io)
 2. Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
 3. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 4. Clone this repository
@@ -12,7 +12,8 @@ Deploy filebeat, metricbeat to ECS nodes, and optionally deploy ecsbeat to a nod
 # Start ELK Stack
 
 If you don't have Elastic Stack (aka ELK) running, following steps here to stand up the stack in Docker containers.
-Install [Elastic Stack]https://github.com/hldnova/elastic-docker
+
+Install [Elastic Stack](https://github.com/hldnova/elastic-docker)
 
 # Deploy filebeat and metricbeat to ECS nodes
 Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configured to collect dataheadsvc.log. The metricbeat collects system and docker metric sets.
