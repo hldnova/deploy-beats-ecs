@@ -9,7 +9,7 @@ output:
 ECS:
   ssh_user: <ssh user to ecs nodes>
   hosts: https://<ecs_host>:4443
-  username: <ecs management username>
+  username: <ecs management user name>
   password: <ecs management user password>
 
 # -----
