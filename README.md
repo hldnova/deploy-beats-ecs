@@ -23,6 +23,22 @@ Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access
 edit work/inventory to specify ECS nodes
 edit group_vars/all to configure logstash hosts
 ```bash
+output:
+  logstash:
+    hosts: localhost:5044
+    # for multiple logstash hosts, use
+    # hosts: 1.1.1.1:5044,2.2.2.2:5044
+
+ECS:
+  ssh_user: <ssh user to ecd nodes>
+  hosts: https://<ecs_host>:4443
+  username: <ecs management username>
+  password: <ecs management user password>
+```
+
+Execute the following commands to download docker images and deploy containers on ECS nodes
+
+```bash
 # ansible-playbook ssh-key.yml --ask-pass
 # sudo ansible-playbook upload-image.yml
 # ansible-playbook main.yml
