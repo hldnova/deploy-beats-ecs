@@ -51,7 +51,7 @@ To remove all the deployed beats
 
 To remove just, e.g., ecsbeat
 ```bash
-# ansible-playbook --tags=ecsbeat
+# ansible-playbook --tags=ecsbeat remove.yml
 ```
 
 You will need to re-run the upload_image.yml playbook if you want to get latest docker images
