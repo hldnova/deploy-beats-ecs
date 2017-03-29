@@ -36,7 +36,7 @@ Edit work/inventory to specify ECS nodes
 10.1.1.1
 ```
 
-Edit group_vars/all to configure logstash hosts
+Edit group_vars/all to configure logstash hosts and ECS credentials
 ```bash
 output:
   logstash:
