@@ -1,0 +1,7 @@
+---
+
+- name: create metricbeat directory on remote nodes
+  file: path={{ destdir }}/{{ metricbeat.config_dir }} state=directory mode=0755
+
+- name: copy metricbeat config file
+  copy:  src="{{ role_path }}/files/{{ metricbeat.config_file }}" dest="{{ destdir }}/{{ metricbeat.config_dir }}"

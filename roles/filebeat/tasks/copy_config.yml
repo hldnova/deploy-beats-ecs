@@ -1,0 +1,7 @@
+---
+
+- name: create filebeat directory on remote nodes
+  file: path={{ destdir }}/{{ filebeat.config_dir }} state=directory mode=0755
+
+- name: copy filebeat config file
+  copy:  src="{{ role_path }}/files/{{ filebeat.config_file }}" dest="{{ destdir }}/{{ filebeat.config_dir }}"

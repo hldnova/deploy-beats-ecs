@@ -1,0 +1,58 @@
+---
+
+output:
+  logstash:
+    hosts: localhost:5044
+    # for multiple logstash hosts, use
+    # hosts: 1.1.1.1:5044,2.2.2.2:5044
+
+  elasticsearch:
+    # enabled for ecsbeat for now
+    hosts: http://localhost:9200
+    #for multiple elasticsearch hosts, use
+    #hosts: http://1.1.1.1:9200,http://2.2.2.2:9200
+
+ECS:
+  ssh_user: <ssh user to ecd nodes>
+  hosts: https://<ecs_host>:4443
+  username: <ecs management username>
+  password: <ecs management user password>
+
+# -----
+  
+# directory to save downloaded images on localhost
+tmpdir: /tmp
+
+# directoy to upload images on remote hosts
+destdir: /opt/beats
+
+images:
+  filebeat:
+    image: emccorp/docker-filebeat:5.2.2
+    filename: emccorp-filebeat-image
+
+  metricbeat:
+    image: emccorp/docker-metricbeat:5.2.2
+    filename: emccorp-metricbeat-image
+  
+  ecsbeat:
+    image: emccorp/docker-ecsbeat
+    filename: emccorp-ecsbeat-image
+
+metricbeat:
+  config_file: metricbeat.yml
+  config_dir: metricbeat
+  container_name: metricbeat
+
+filebeat:
+  config_file: filebeat.yml
+  config_dir: filebeat
+  container_name: filebeat
+
+ecsbeat:
+  config_file: ecsbeat.yml
+  config_dir: ecsbeat
+  container_name: ecsbeat
+
+ecslogs:
+  opt_emc_caspian_fabric_agent_services_object_main_log: /opt/emc/caspian/fabric/agent/services/object/main/log

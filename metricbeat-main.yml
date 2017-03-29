@@ -1,0 +1,11 @@
+---
+
+- hosts: nodes
+  gather_facts: no
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
+
+  roles:
+    - metricbeat
+

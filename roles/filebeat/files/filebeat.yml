@@ -1,0 +1,47 @@
+
+filebeat:
+  # List of prospectors to fetch data.
+  prospectors:
+    # Each - is a prospector. Below are the prospector specific configurations
+    #-
+    #  paths:
+    #    - /var/log/syslog
+    #  input_type: log
+    #  document_type: syslog
+    #  fields_under_root: true
+
+    -
+      paths:
+        - /var/log/ecs/dataheadsvc.log
+      input_type: log
+      document_type: ecsdatahead
+      tail_files: true
+      multiline:
+        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+        negate: true
+        match: after
+
+    -
+      paths:
+        - "/var/log/ecs/*-perf-counter.log"
+      document_type: ecsperfcounter
+      tail_files: true
+
+    -
+      paths:
+        - "/var/log/ecs/blobsvc.log"
+        - "/var/log/ecs/*-error.log"
+      document_type: ecsjavalog
+      tail_files: true
+      multiline:
+        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+        negate: true
+        match: after
+
+output:
+
+  ### Logstash as output
+  logstash:
+    # The Logstash hosts
+    #hosts: ["localhost:5044"]
+    hosts: [LOGSTASH_HOSTS]

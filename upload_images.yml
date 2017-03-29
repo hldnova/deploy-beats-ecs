@@ -1,0 +1,79 @@
+---
+- name: download filebeat docker images
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: pull filebeat image
+      command: docker pull "{{ images.filebeat.image }}"
+      tags: filebeat
+
+    - name: check for file
+      stat: path="{{ tmpdir }}/{{ images.filebeat.filename }}"
+      register: file_exists
+      tags: filebeat
+
+    - name: save filebeat image to local disk
+      command: docker save -o "{{ tmpdir }}/{{ images.filebeat.filename }}" "{{ images.filebeat.image }}"
+      #when: file_exists.stat.exists == False
+      tags: filebeat
+      
+    - name: pull metricbeat image
+      command: docker pull  "{{ images.metricbeat.image }}"
+      tags: metricbeat
+
+    - name: check for file
+      stat: path="{{ tmpdir }}/{{ images.metricbeat.filename }}"
+      register: file_exists
+      tags: metricbeat
+
+    - name: save metricbeat image to local disk
+      command: docker save -o "{{ tmpdir }}/{{ images.metricbeat.filename }}" "{{ images.metricbeat.image }}"
+      #when: file_exists.stat.exists == False
+      tags: metricbeat
+
+    - name: pull ecsbeat image
+      command: docker pull  "{{ images.ecsbeat.image }}"
+      tags: ecsbeat
+
+    - name: save ecsbeat image to local disk
+      command: docker save -o "{{ tmpdir }}/{{ images.ecsbeat.filename }}" "{{ images.ecsbeat.image }}"
+      tags: ecsbeat
+
+- name: copy image to remote nodes
+  hosts: nodes
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Transfer filebeat image to remote nodes
+      copy:  src="{{ tmpdir }}/{{ images.filebeat.filename }}" dest="{{ destdir }}/{{ filebeat.config_dir }}/"
+      tags: filebeat
+
+    - name: load filebeat image to docker
+      command: docker load -i "{{ destdir }}/{{ filebeat.config_dir }}/{{ images.filebeat.filename }}"
+      tags: filebeat
+        
+    - name: Transfer metricbeat image to remote nodes
+      copy:  src="{{ tmpdir }}/{{ images.metricbeat.filename }}" dest="{{ destdir }}/{{ metricbeat.config_dir }}/"
+      tags: metricbeat
+
+    - name: load metricbeat image to docker
+      command: docker load -i "{{ destdir }}/{{ metricbeat.config_dir }}/{{ images.metricbeat.filename }}"
+      tags: metricbeat
+
+- name: copy ecsbeat image to remote node
+  hosts: nodes-ecsbeat
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_method: sudo
+
+  tasks:
+    - name: Transfer ecsbeat image to remote nodes
+      copy:  src="{{ tmpdir }}/{{ images.ecsbeat.filename }}" dest="{{ destdir }}/{{ ecsbeat.config_dir }}/"
+      tags: ecsbeat
+
+    - name: load ecsbeat image to docker
+      command: docker load -i "{{ destdir }}/{{ ecsbeat.config_dir }}/{{ images.ecsbeat.filename }}"
+      tags: ecsbeat
+ 

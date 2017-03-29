@@ -1,0 +1,14 @@
+---
+
+- hosts: nodes-ecsbeat
+#- hosts: 127.0.0.1
+#  connection: local
+  gather_facts: no
+
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
+
+  roles:
+    - ecsbeat
+

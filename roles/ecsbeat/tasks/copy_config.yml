@@ -1,0 +1,7 @@
+---
+
+- name: create ecsbeat directory on remote nodes
+  file: path={{ destdir }}/{{ ecsbeat.config_dir }} state=directory mode=0755
+
+- name: copy ecsbeat config file
+  copy:  src="{{ role_path }}/files/{{ ecsbeat.config_file }}" dest="{{ destdir }}/{{ ecsbeat.config_dir }}/"

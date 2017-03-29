@@ -1,0 +1,12 @@
+# sample inventory
+
+# filebeat and metricbeat are deployed on nodes
+[nodes]
+10.1.1.1
+10.1.1.2
+10.1.1.3
+10.1.1.4
+
+# ecsbeat is deployed on one node
+[nodes-ecsbeat]
+10.1.1.1

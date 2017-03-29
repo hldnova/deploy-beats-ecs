@@ -1,0 +1,18 @@
+---
+- name: remove existing filebeat container 
+  ignore_errors: yes
+  command: docker rm -f "{{ filebeat.container_name }}"
+
+- name: start docker container
+  ignore_errors: yes
+  command: |
+    docker run -d
+               --pid=host
+               --net=host
+               --memory="128m"
+               --name="{{ filebeat.container_name }}"
+               -v "{{ destdir }}/{{ filebeat.config_dir }}/{{ filebeat.config_file }}:/filebeat/filebeat.yml"
+               -v  "/var/log/messages:/var/log/syslog"
+               -v "{{ ecslogs.opt_emc_caspian_fabric_agent_services_object_main_log }}:/var/log/ecs/"
+               -e LOGSTASH_HOSTS='{{ output.logstash.hosts }}'
+               "{{ images.filebeat.image }}"

@@ -1,0 +1,57 @@
+---
+
+- name: remove containers on ECS nodes
+  hosts: nodes
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
+
+  tasks:
+    - name: remove metricbeat container
+      command: docker rm -f "{{ metricbeat.container_name }}"
+      ignore_errors: yes
+      tags: metricbeat
+
+    - name: remove filebeat container
+      command: docker rm -f "{{ filebeat.container_name }}"
+      ignore_errors: yes
+      tags: filebeat
+
+    - name: remove metricbeat image
+      command: docker rmi -f "{{ images.metricbeat.image }}"
+      ignore_errors: yes
+      tags: metricbeat
+
+    - name: remove filebeat image
+      command: docker rmi -f "{{ images.filebeat.image }}"
+      ignore_errors: yes
+      tags: filebeat
+
+    - name: remove metricbeat file
+      file: dest="{{ destdir }}/{{ metricbeat.config_dir }}" state=absent
+      tags: metricbeat
+
+    - name: remove filebeat file
+      file: dest="{{ destdir }}/{{ filebeat.config_dir }}" state=absent
+      tags: filebeat
+
+- name: Clean up ecsbeat
+  hosts: nodes-ecsbeat
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
+
+  tasks:
+    - name: remove ecsbeat container
+      command: docker rm -f "{{ ecsbeat.container_name }}"
+      ignore_errors: yes
+      tags: ecsbeat
+
+    - name: remove ecsbeat image
+      command: docker rmi -f "{{ images.ecsbeat.image }}"
+      ignore_errors: yes
+      tags: ecsbeat
+
+    - name: remove ecsbeat file
+      file: dest="{{ destdir }}/{{ ecsbeat.config_dir }}" state=absent
+      tags: ecsbeat
