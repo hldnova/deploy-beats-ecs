@@ -6,12 +6,6 @@ output:
     # for multiple logstash hosts, use
     # hosts: 1.1.1.1:5044,2.2.2.2:5044
 
-  elasticsearch:
-    # enabled for ecsbeat for now
-    hosts: http://localhost:9200
-    #for multiple elasticsearch hosts, use
-    #hosts: http://1.1.1.1:9200,http://2.2.2.2:9200
-
 ECS:
   ssh_user: <ssh user to ecs nodes>
   hosts: https://<ecs_host>:4443
