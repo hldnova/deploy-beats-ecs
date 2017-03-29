@@ -20,8 +20,23 @@ Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configur
 
 Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK stack.
 
-edit work/inventory to specify ECS nodes
-edit group_vars/all to configure logstash hosts
+Optionally, Edit ansible.cfg.
+
+Edit work/inventory to specify ECS nodes
+```bash
+# filebeat and metricbeat are deployed on nodes
+[nodes]
+10.1.1.1
+10.1.1.2
+10.1.1.3
+10.1.1.4
+
+# ecsbeat is deployed on one node
+[nodes-ecsbeat]
+10.1.1.1
+```
+
+Edit group_vars/all to configure logstash hosts
 ```bash
 output:
   logstash:
@@ -30,7 +45,7 @@ output:
     # hosts: 1.1.1.1:5044,2.2.2.2:5044
 
 ECS:
-  ssh_user: <ssh user to ecd nodes>
+  ssh_user: <ssh user to ecs nodes>
   hosts: https://<ecs_host>:4443
   username: <ecs management username>
   password: <ecs management user password>
@@ -43,7 +58,8 @@ Execute the following commands to download docker images and deploy containers o
 # sudo ansible-playbook upload-image.yml
 # ansible-playbook main.yml
 ```
-log on to an ECS node to verify filebeat and metricbeat containers are running. 
+
+Log on to an ECS node to verify filebeat and metricbeat containers are running. 
 ```bash
 # sudo docker logs filebeat
 # sudo docker logs metricbeat
