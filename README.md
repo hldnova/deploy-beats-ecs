@@ -4,36 +4,26 @@ Deploy filebeat, metricbeat to ECS nodes, and optionally deploy ecsbeat to a nod
 
 # Setup
 1. Install [Docker](http://docker.io).
-2. Install [Docker-compose](http://docs.docker.com/compose/install/)
-3. Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
-4. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-5. Clone this repository
+2. Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
+3. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+4. Clone this repository
 
 
 # Start ELK Stack
-Start the ELK stack with *docker-compose*. 
 
-cd to ecs-dashboard/docker-elk and edit docker-compose.yml to disable filebeat, metricbeat, ecsbeat
-Edit the ecsbeat section if you want to run ecsbeat on the same host as ELK stack. 
-Edit ecsbeat/config/ecsbeat.yml to configure metricsets, ECS hosts/username/password, logstash output.
-```bash
-# docker-compose up -d
-```
+If you don't have Elastic Stack (aka ELK) running, following steps here to stand up the stack in Docker containers.
+Install [Elastic Stack]https://github.com/hldnova/elastic-docker
 
 # Deploy filebeat and metricbeat to ECS nodes
 Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configured to collect dataheadsvc.log. The metricbeat collects system and docker metric sets.
 
-Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK stack host.
+Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK stack.
 
-
-cd to ecs-dashboard/deploy/playbooks
-create directory work
-copy inventory.example to work/inventory
 edit work/inventory to specify ECS nodes
 edit group_vars/all to configure logstash hosts
 ```bash
 # ansible-playbook ssh-key.yml --ask-pass
-# ansible-playbook upload-image.yml
+# sudo ansible-playbook upload-image.yml
 # ansible-playbook main.yml
 ```
 log on to an ECS node to verify filebeat and metricbeat containers are running. 
@@ -47,3 +37,20 @@ To verify your data are present in Elasticsearch, issue the following commands:
 # curl -XGET http://<your_elasticsearch_host>:9200/filebeat-*/_search?pretty
 # curl -XGET http://<your_elasticsearch_host>:9200/metricbeat-*/_search?pretty
 ```
+
+You can also run the individual playbook to, e.g., restart ecsbeat
+```bash
+# ansible-playbook ecsbeat-main.yml
+```
+
+To remove all the deployed beats
+```bash
+# ansible-playbook remove.yml
+```
+
+To remove just, e.g., ecsbeat
+```bash
+# ansible-playbook --tags=ecsbeat
+```
+
+You will need to re-run the upload_image.yml playbook if you want to get latest docker images
