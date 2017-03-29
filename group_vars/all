@@ -13,7 +13,7 @@ output:
     #hosts: http://1.1.1.1:9200,http://2.2.2.2:9200
 
 ECS:
-  ssh_user: <ssh user to ecd nodes>
+  ssh_user: <ssh user to ecs nodes>
   hosts: https://<ecs_host>:4443
   username: <ecs management username>
   password: <ecs management user password>
