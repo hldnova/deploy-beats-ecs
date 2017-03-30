@@ -65,7 +65,7 @@ Log on to an ECS node to verify filebeat and metricbeat containers are running.
 # sudo docker logs metricbeat
 ```
 
-To verify your data are present in Elasticsearch, issue the following commands:
+To verify your data are present in Elasticsearch, issue the following commands. You many need to adjust the index patterns depending on how your ELK stack is configured.
 ```bash
 # curl -XGET http://<your_elasticsearch_host>:9200/filebeat-*/_search?pretty
 # curl -XGET http://<your_elasticsearch_host>:9200/metricbeat-*/_search?pretty
