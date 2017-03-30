@@ -15,7 +15,7 @@ If you don't have Elastic Stack (aka ELK) running, following steps here to stand
 
 Install [Elastic Stack](https://github.com/hldnova/elastic-docker)
 
-# Deploy filebeat and metricbeat to ECS nodes
+# Deploy beats to ECS nodes
 Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configured to collect dataheadsvc.log. The metricbeat collects system and docker metric sets.
 
 Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK stack.
