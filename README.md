@@ -40,14 +40,14 @@ Edit group_vars/all to configure logstash hosts and ECS credentials
 ```bash
 output:
   logstash:
-    hosts: localhost:5044
+    hosts: 10.3.1.1:5044
     # for multiple logstash hosts, use
-    # hosts: 1.1.1.1:5044,2.2.2.2:5044
+    # hosts: 10.3.1.1:5044,10.3.2.2:5044
 
 ECS:
   ssh_user: <ssh user to ecs nodes>
-  hosts: https://<ecs_host>:4443
-  username: <ecs management username>
+  hosts: <ecs_host>:<4443 or port>
+  username: <ecs management user name>
   password: <ecs management user password>
 ```
 
