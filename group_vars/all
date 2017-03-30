@@ -38,17 +38,17 @@ images:
 
 metricbeat:
   config_file: metricbeat.yml
-  config_dir: metricbeat
+  config_dir: metricbeat{{ postfix }}
   container_name: metricbeat{{ postfix }}
 
 filebeat:
   config_file: filebeat.yml
-  config_dir: filebeat
+  config_dir: filebeat{{ postfix }}
   container_name: filebeat{{ postfix }}
 
 ecsbeat:
   config_file: ecsbeat.yml
-  config_dir: ecsbeat
+  config_dir: ecsbeat{{ postfix }}
   container_name: ecsbeat{{ postfix }}
 
 ecslogs:
