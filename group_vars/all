@@ -8,7 +8,7 @@ output:
 
 ECS:
   ssh_user: <ssh user to ecs nodes>
-  hosts: https://<ecs_host>:4443
+  hosts: <ecs_host>:<4443 or port>
   username: <ecs management user name>
   password: <ecs management user password>
 
@@ -19,6 +19,9 @@ tmpdir: /tmp
 
 # directoy to upload images on remote hosts
 destdir: /opt/beats
+
+# container postfix
+postfix: ""
 
 images:
   filebeat:
@@ -36,17 +39,17 @@ images:
 metricbeat:
   config_file: metricbeat.yml
   config_dir: metricbeat
-  container_name: metricbeat
+  container_name: metricbeat{{ postfix }}
 
 filebeat:
   config_file: filebeat.yml
   config_dir: filebeat
-  container_name: filebeat
+  container_name: filebeat{{ postfix }}
 
 ecsbeat:
   config_file: ecsbeat.yml
   config_dir: ecsbeat
-  container_name: ecsbeat
+  container_name: ecsbeat{{ postfix }}
 
 ecslogs:
   opt_emc_caspian_fabric_agent_services_object_main_log: /opt/emc/caspian/fabric/agent/services/object/main/log
