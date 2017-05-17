@@ -4,100 +4,97 @@
 ecsbeat:
   # Defines how often an event is fetched from ecs and sent to the output
   # Can use command level interval to overwrite it
-  period: 60s
+  period: 300s
 
   # Customer ECS Setup
   customers:
-    EMC:                         # customer name
-      username: ECS_USERNAME             # mgmt username
-      password: ECS_PASSWORD         # mgmt password
+    - customername: EMC          # customer name
+      username: ECS_USERNAME
+      password: ECS_PASSWORD        # mgmt password
       tokenexpiry: 3500s         # token valid period. shall set this timer a little smaller than ECS token valid period
       reqtimeout: 30s            # request timeout
-      blockduration: 600s        # how long a node shall stay in blacklist if request to this node times out. 0s for not blocking
-      vdcs:
-        VDC1:                    # VDC name, could be anything as long as each VDC has different name
-           nodes:
-             - host: ECS_HOSTS  # host to query. Add mgmt IPs of all nodes in this VDC below, or site LB host (and port if not 4443, set blockduration to 0s if single LB host is used)
-        #      - host: 10.1.83.52  # host
-        # VDC2:                    # VDC name
-        #    nodes:
-        #      - host: 10.1.83.53  # host
-        #      - host: 10.1.83.54  # host
+      blockduration: 0s          # how long a node shall stay in blacklist if request to this node times out. 0s for not blocking
       cfgrefreshinterval: 3600s  # How frequent to update VDC and node names. Generally, default value is good enough because these info is almost never changed
+      vdcs:
+        - vdcname: VDC1          # VDC name, could be anything as long as each VDC has different name
+          nodes:
+            - host: ECS_HOSTS   # host to query. Add mgmt IPs of all nodes in this VDC below,or site LB host (and port if not 4443, set blockduration to 0s if single LB host is used)
+        #    - host: 10.247.7.165   # host
+        #- vdcname: VDC2
+        #  nodes:
+        #    - host: 10.1.83.53   # host
+        #    - host: 10.1.83.54   # host
 
   # Add additional customer here
-  # DELL:
-  #   username: root
-  #   password: ChangeMe
-  #   tokenexpiry: 3500s
-  #   reqtimeout: 30s
-  #   blockduration: 600s
-  #   vdcs:
-  #     EAST:
-  #        nodes:
-  #          - host: 10.1.83.51
-  #          - host: 10.1.83.52
-  #     WEST:
-  #        nodes:
-  #          - host: 10.1.83.53
-  #          - host: 10.1.83.54
-  #   cfgrefreshinterval: 3600s
 
 #================================ Ecs Cluster  =====================================
 #ecsconfig:
-  commands: ## DON'T change commands section ##
+  commands: ## DON'T change commands section except for interval ##
     - uri: /vdc/events.json
       type: auditevent
       level: vdc
       interval: 60s # must be multiple of 60s
+      enabled: true
     - uri: /vdc/alerts.json
       type: alert
       level: vdc
-      interval: 30s
+      interval: 60s # must be multiple of 60s
+      enabled: true
     - uri: /vdc/alerts/latest.json
       type: latestalert
       level: vdc
-      interval: 30s
+      interval: 60s
+      enabled: true
     - uri: /dashboard/zones/localzone?dataType=current
       type: localzone
       level: vdc
       interval: 0
+      enabled: true
     - uri: /dashboard/zones/localzone/nodes?dataType=current
       type: nodes
       level: vdc
       interval: 0
+      enabled: true
     - uri: /dashboard/zones/localzone/replicationgroups?dataType=current
       type: replicationgroups
       level: vdc
       interval: 0
+      enabled: true
     - uri: /dashboard/zones/localzone/storagepools?dataType=current
       type: storagepools
       level: vdc
       interval: 0
+      enabled: true
     - uri: /dashboard/nodes/%s/disks?dataType=current
       type: disks
       level: node
       interval: 0
+      enabled: true
     - uri: /dashboard/nodes/%s/processes?dataType=current
       type: processes
       level: node
       interval: 0
+      enabled: true
     - uri: /object/capacity.json
       type: capacity
       level: system
       interval: 0
+      enabled: true
     - uri: /object/billing/namespace/info.json?include_bucket_detail=false
       type: nsbilling
       level: system
-      interval: 0
+      interval: 600s
+      enabled: true
     - uri: /object/billing/namespace/sample.json?include_bucket_detail=false
       type: nsbillingsample
       level: system
-      interval: 300s # must be multiple of 300s
-      #- uri: /diagnostic/DumpOwnershipInfo/
-      #type: dtinfo
-      #level: node
-  
+      interval: 600s # must be multiple of 300s
+      enabled: true
+    - uri: dummy
+      type: dtinfo
+      level: dtinfo # dtinfo is specially handled
+      interval: 600s
+      enabled: true
 
 #================================ General =====================================
 

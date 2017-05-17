@@ -5,15 +5,17 @@
   command: docker rm -f "{{ metricbeat.container_name }}"
 
 - name: start docker container
-  ignore_errors: yes
   command: |
     docker run -d
                --pid=host
                --net=host
                --memory="128m"
+               --restart=always
                --name "{{ metricbeat.container_name }}"
                -v "{{ destdir }}/{{ metricbeat.config_dir }}/{{ metricbeat.config_file }}:/metricbeat/metricbeat.yml"
                -v "/var/run/docker.sock:/var/run/dockerhost/docker.sock"
+               -v "/opt/emc/caspian/fabric/agent/services/object/data:/data"
                -e LOGSTASH_HOSTS='{{ output.logstash.hosts }}'
+               -e ECS_NODE_IP=$ECS_NODE_IP
                "{{ images.metricbeat.image }}"
 

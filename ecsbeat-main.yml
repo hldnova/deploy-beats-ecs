@@ -1,14 +1,10 @@
 ---
 
-- hosts: nodes-ecsbeat
-#- hosts: 127.0.0.1
-#  connection: local
+- hosts: "{{ hosts | default('ecsbeat') }}"
   gather_facts: no
-
   user: "{{ ECS.ssh_user }}"
   become: true
   become_user: root
 
   roles:
-    - ecsbeat
-
+    - { role: ecsbeat, when: "ecsbeat is defined" }

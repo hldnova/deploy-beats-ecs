@@ -1,10 +1,13 @@
 ---
 
-- hosts: nodes
+- hosts: "{{ hosts | default('metricbeat') }}"
   gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_user: root
+
+  environment:
+    - ECS_NODE_IP: "{{ lookup('env', 'ECS_NODE_IP') | default(inventory_hostname, true) }}"
 
   roles:
     - metricbeat

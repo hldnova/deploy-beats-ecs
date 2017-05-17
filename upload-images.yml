@@ -1,5 +1,5 @@
 ---
-- name: download filebeat docker images
+- name: download beats docker images
   hosts: localhost
   connection: local
   tasks:
@@ -39,8 +39,8 @@
       command: docker save -o "{{ tmpdir }}/{{ images.ecsbeat.filename }}" "{{ images.ecsbeat.image }}"
       tags: ecsbeat
 
-- name: copy image to remote nodes
-  hosts: nodes
+- name: copy filebeat image to remote nodes
+  hosts: "{{ hosts | default('filebeat') }}"
   user: "{{ ECS.ssh_user }}"
   become: true
   become_method: sudo
@@ -54,6 +54,13 @@
       command: docker load -i "{{ destdir }}/{{ filebeat.config_dir }}/{{ images.filebeat.filename }}"
       tags: filebeat
         
+- name: copy metricbeat image to remote nodes
+  hosts: "{{ hosts | default('metricbeat') }}"
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_method: sudo
+
+  tasks:
     - name: Transfer metricbeat image to remote nodes
       copy:  src="{{ tmpdir }}/{{ images.metricbeat.filename }}" dest="{{ destdir }}/{{ metricbeat.config_dir }}/"
       tags: metricbeat
@@ -62,8 +69,9 @@
       command: docker load -i "{{ destdir }}/{{ metricbeat.config_dir }}/{{ images.metricbeat.filename }}"
       tags: metricbeat
 
+
 - name: copy ecsbeat image to remote node
-  hosts: nodes-ecsbeat
+  hosts: "{{ hosts | default('ecsbeat') }}"
   user: "{{ ECS.ssh_user }}"
   become: true
   become_method: sudo

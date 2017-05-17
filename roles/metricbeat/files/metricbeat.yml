@@ -6,16 +6,25 @@ metricbeat.modules:
     - memory
     - network
     - process
+    - load
+    - fsstat
+    - core
+    - diskio
+    - socket
   enabled: true
-  period: 300
+  period: 60
   processes: ['.*']
-  cpu_ticks: false
+#  cpu_ticks: false
 
-- module: docker
-  metricsets: ["cpu", "info", "memory", "network", "diskio", "container"]
-  hosts: ["unix:///var/run/dockerhost/docker.sock"]
-  enabled: true
-  period: 300
+#- module: docker
+#  metricsets: ["cpu", "info", "memory", "network", "diskio", "container"]
+#  hosts: ["unix:///var/run/dockerhost/docker.sock"]
+#  enabled: true
+#  period: 300
+
+fields_under_root: true
+fields:
+   ecs-node-ip: ${ECS_NODE_IP}
 
 output.logstash:
   enabled: true

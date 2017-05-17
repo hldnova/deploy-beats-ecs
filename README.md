@@ -9,32 +9,14 @@ Deploy filebeat, metricbeat to ECS nodes, and optionally deploy ecsbeat to a nod
 4. Clone this repository
 
 
-# Start ELK Stack
-
-If you don't have Elastic Stack (aka ELK) running, following steps here to stand up the stack in Docker containers.
-
-Install [Elastic Stack](https://github.com/hldnova/elastic-docker)
-
 # Deploy beats to ECS nodes
-Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configured to collect dataheadsvc.log. The metricbeat collects system and docker metric sets.
+Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configured to collect dataheadsvc.log. The metricbeat collects system and docker metric sets. The ecsbeat will be deployed to one ECS node.
 
 Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK stack.
 
 Optionally, Edit ansible.cfg.
 
-Edit work/inventory to specify ECS nodes
-```bash
-# filebeat and metricbeat are deployed on nodes
-[nodes]
-10.1.1.1
-10.1.1.2
-10.1.1.3
-10.1.1.4
-
-# ecsbeat is deployed on one node
-[nodes-ecsbeat]
-10.1.1.1
-```
+Edit work/inventory to specify ECS nodes, vdc, and ECS credentials. Filebeat and metricbeat are deploy on all the nodes. Ecsbeat should be deploy on one node per vdc.
 
 Edit group_vars/all to configure logstash hosts and ECS credentials
 ```bash
@@ -44,11 +26,6 @@ output:
     # for multiple logstash hosts, use
     # hosts: 10.3.1.1:5044,10.3.2.2:5044
 
-ECS:
-  ssh_user: <ssh user to ecs nodes>
-  hosts: <ecs_host>:<4443 or port>
-  username: <ecs management user name>
-  password: <ecs management user password>
 ```
 
 Execute the following commands to download docker images and deploy containers on ECS nodes
@@ -56,7 +33,7 @@ Execute the following commands to download docker images and deploy containers o
 ```bash
 # ansible-playbook ssh-key.yml --ask-pass
 # sudo ansible-playbook upload-image.yml
-# ansible-playbook main.yml
+# ansible-playbook install.yml
 ```
 
 Log on to an ECS node to verify filebeat and metricbeat containers are running. 
@@ -78,12 +55,12 @@ You can also run the individual playbook to, e.g., restart ecsbeat
 
 To remove all the deployed beats
 ```bash
-# ansible-playbook remove.yml
+# ansible-playbook uninstall.yml
 ```
 
 To remove just, e.g., ecsbeat
 ```bash
-# ansible-playbook --tags=ecsbeat remove.yml
+# ansible-playbook --tags=ecsbeat uninstall.yml
 ```
 
-You will need to re-run the upload_image.yml playbook if you want to get latest docker images
+You will need to re-run the upload-image.yml playbook if you want to get latest docker images

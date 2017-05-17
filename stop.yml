@@ -1,0 +1,23 @@
+---
+
+- name: remove containers on ECS nodes
+  hosts: all
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
+
+  tasks:
+    - name: remove metricbeat container
+      command: docker rm -f "{{ metricbeat.container_name }}"
+      ignore_errors: yes
+      tags: metricbeat
+
+    - name: remove filebeat container
+      command: docker rm -f "{{ filebeat.container_name }}"
+      ignore_errors: yes
+      tags: filebeat
+
+    - name: remove ecsbeat container
+      command: docker rm -f "{{ ecsbeat.container_name }}"
+      ignore_errors: yes
+      tags: ecsbeat

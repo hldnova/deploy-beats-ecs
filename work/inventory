@@ -1,12 +1,40 @@
 # sample inventory
+[filebeat:children]
+vdc1
+vdc2
 
-# filebeat and metricbeat are deployed on nodes
-[nodes]
-10.1.1.1
-10.1.1.2
-10.1.1.3
-10.1.1.4
+[metricbeat:children]
+vdc1
+vdc2
 
-# ecsbeat is deployed on one node
-[nodes-ecsbeat]
-10.1.1.1
+[ecsbeat:children]
+vdc1-ecsbeat
+vdc2-ecsbeat
+
+[vdc1]
+10.1.1.161 
+10.1.1.163
+10.1.1.165
+10.1.1.167
+
+[vdc1-ecsbeat]
+10.1.1.161
+
+[vdc1-ecsbeat:vars]
+ecs_hosts=10.1.1.161:4443
+ecs_username=user
+ecs_password=pass
+
+[vdc2]
+10.1.11.205
+10.1.11.209
+10.1.11.219
+10.1.11.228
+
+[vdc2-ecsbeat]
+10.1.11.205
+
+[vdc2-ecsbeat:vars]
+ecs_hosts=10.1.11.205:4443
+ecs_username=user
+ecs_password=pass
