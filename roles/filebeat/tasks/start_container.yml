@@ -6,7 +6,6 @@
 - name: start docker container
   command: |
     docker run -d
-               --pid=host
                --net=host
                --memory="128m"
                --restart=always
