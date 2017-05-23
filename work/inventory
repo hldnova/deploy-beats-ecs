@@ -12,29 +12,31 @@ vdc1-ecsbeat
 vdc2-ecsbeat
 
 [vdc1]
-10.1.1.161 
-10.1.1.163
-10.1.1.165
-10.1.1.167
+10.247.134.219
+10.247.134.220
 
 [vdc1-ecsbeat]
-10.1.1.161
+10.247.134.219
 
 [vdc1-ecsbeat:vars]
-ecs_hosts=10.1.1.161:4443
-ecs_username=user
-ecs_password=pass
+ecs_hosts=10.247.134.219:4443
+ecs_username=root
+ecs_password=ChangeMe
 
 [vdc2]
-10.1.11.205
-10.1.11.209
-10.1.11.219
-10.1.11.228
+10.247.134.221
+10.247.134.222
 
 [vdc2-ecsbeat]
-10.1.11.205
+10.247.134.221
 
 [vdc2-ecsbeat:vars]
-ecs_hosts=10.1.11.205:4443
-ecs_username=user
-ecs_password=pass
+ecs_hosts=10.247.134.221:4443
+ecs_username=root
+ecs_password=ChangeMe
+
+[coreos]
+10.247.134.219
+10.247.134.220
+10.247.134.221
+10.247.134.222
