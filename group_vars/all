@@ -30,7 +30,7 @@ images:
     filename: emccorp-metricbeat-image
   
   ecsbeat:
-    image: emccorp/docker-ecsbeat
+    image: emccorp/docker-ecsbeat:latest
     filename: emccorp-ecsbeat-image
 
 metricbeat:
