@@ -2,12 +2,12 @@
 
 output:
   logstash:
-    hosts: 10.247.134.219:5044
+    hosts: 10.247.134.223:5044
     # for multiple logstash hosts, use
     # hosts: 1.1.1.1:5044,2.2.2.2:5044
 
 ECS:
-  ssh_user: admin
+  ssh_user: root
 
 # -----
   
@@ -49,4 +49,6 @@ ecsbeat:
   container_name: ecsbeat{{ postfix }}
 
 ecslogs:
-  object_main_log: /opt/emc/caspian/fabric/agent/services/object/main/log
+  object_main_log: /var/log/vipr/emcvipr-object
+
+ansible_python_interpreter: /opt/bin/python
