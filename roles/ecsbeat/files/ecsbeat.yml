@@ -80,12 +80,12 @@ ecsbeat:
       level: system
       interval: 0
       enabled: true
-    - uri: /object/billing/namespace/info.json?include_bucket_detail=false
+    - uri: /object/billing/namespace/info.json?include_bucket_detail=false&sizeunit=GB
       type: nsbilling
       level: system
       interval: 600s
       enabled: true
-    - uri: /object/billing/namespace/sample.json?include_bucket_detail=false
+    - uri: /object/billing/namespace/sample.json?include_bucket_detail=false&sizeunit=GB
       type: nsbillingsample
       level: system
       interval: 600s # must be multiple of 300s
