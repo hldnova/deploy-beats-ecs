@@ -23,6 +23,8 @@ filebeat:
 fields_under_root: true
 fields:
    ecs-node-ip: ${ECS_NODE_IP}
+   ecs-vdc-name: ${ECS_VDC_NAME}
+   ecs-vdc-id: ${ECS_VDC_ID}
 
 output:
 

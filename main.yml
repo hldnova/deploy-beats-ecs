@@ -1,6 +1,0 @@
----
-
-- include: filebeat-main.yml
-- include: metricbeat-main.yml
-- include: ecsbeat-main.yml
-

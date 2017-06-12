@@ -8,6 +8,8 @@
 
   environment:
     - ECS_NODE_IP: "{{ lookup('env', 'ECS_NODE_IP') | default(inventory_hostname, true) }}"
+    - ECS_VDC_NAME: "{{ ecs_vdc_name }}"
+    - ECS_VDC_ID: "{{ ecs_vdc_id }}"
 
   roles:
     - metricbeat
