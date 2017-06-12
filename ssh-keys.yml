@@ -11,7 +11,8 @@
       when: not ansible_rsa.stat.exists
 
 - name: Exchange SSH Keys
-  hosts: all
+  hosts: "{{ hosts | default('all') }}"
+  #hosts: all
   user: "{{ ECS.ssh_user }}"
   tasks:
     - set_fact:
