@@ -104,27 +104,17 @@ filebeat:
       fields:
         log_type: svcerrorlog
 
-#    -
-#      paths:
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc-chunk-lifecycle.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/cm-chunk-lifecycle.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/metering-chunk-lifecycle.log
-#      tail_files: true
-#      document_type: chunklifelog
-#      multiline:
-#        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-#        negate: true
-#        match: after
-#
-#    -
-#      paths:
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc.log
-#      tail_files: true
-#      document_type: blobsvclog
-#      multiline:
-#        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-#        negate: true
-#        match: after
+    -
+      paths:
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc.log
+      tail_files: true
+      document_type: javalog
+      multiline:
+        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+        negate: true
+        match: after
+      fields:
+        log_type: blobsvclog
 
 
 fields_under_root: true
