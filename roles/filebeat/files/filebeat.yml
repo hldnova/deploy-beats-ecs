@@ -18,6 +18,7 @@ filebeat:
         pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
         negate: true
         match: after
+      include_lines: ['RequestLog']
 
     - 
       paths:
@@ -61,44 +62,48 @@ filebeat:
         - 'send UpdateGroupMembershipRequest'
         - 'HeartBeatMonitor.*node'
 
-#    -
-#      paths:
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/btree-gc.log
-#      tail_files: true
-#      document_type: btreegclog
-#      multiline:
-#        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-#        negate: true
-#        match: after
-#      include_lines: ['Total unserialized size of the tree']
-#
-#    -
-#      paths:
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/georeceiver-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/ssm-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/btree-gc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/metering-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/stat-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/cm-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/nginx_error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/storageserver-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/provisionsvc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/transformsvc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/dtquery-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/resourcesvc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/eventsvc-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/rm-error.log
-#        - /opt/emc/caspian/fabric/agent/services/object/main/log/vnest-error.log
-#      tail_files: true
-#      max_bytes: 32700
-#      document_type: svcerrorlog
-#      multiline:
-#        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-#        negate: true
-#        match: after
-#
+    -
+      paths:
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/btree-gc.log
+      tail_files: true
+      document_type: javalog
+      multiline:
+        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+        negate: true
+        match: after
+      #include_lines: ['Total unserialized size of the tree']
+      fields:
+        log_type: betreegc
+
+    -
+      paths:
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/georeceiver-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/ssm-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/btree-gc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/metering-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/stat-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/cm-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/nginx_error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/storageserver-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/provisionsvc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/transformsvc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/dtquery-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/resourcesvc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/eventsvc-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/rm-error.log
+        - /opt/emc/caspian/fabric/agent/services/object/main/log/vnest-error.log
+      tail_files: true
+      max_bytes: 32700
+      document_type: svcerrorlog
+      multiline:
+        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+        negate: true
+        match: after
+      fields:
+        log_type: svcerrorlog
+
 #    -
 #      paths:
 #        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc-chunk-lifecycle.log
