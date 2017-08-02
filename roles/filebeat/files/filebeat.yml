@@ -71,9 +71,9 @@ filebeat:
         pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
         negate: true
         match: after
-      #include_lines: ['Total unserialized size of the tree']
+      include_lines: ['Total unserialized size of the tree']
       fields:
-        log_type: betreegc
+        log_type: btreegclog
 
     -
       paths:
@@ -121,10 +121,10 @@ filebeat:
         - /opt/emc/caspian/fabric/agent/services/object/main/log/storageserver.log
       tail_files: true
       document_type: storageserverlog
-      #multiline:
-      #  pattern: "^ [[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-      #  negate: true
-      #  match: after
+      multiline:
+        pattern: "^ [[:digit:]]{4}-"
+        negate: true
+        match: after
       fields:
         log_type: storageserverlog
       include_lines: ['Resource consumption is over limits']
