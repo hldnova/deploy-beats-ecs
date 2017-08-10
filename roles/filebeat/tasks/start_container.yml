@@ -9,6 +9,7 @@
                --pid=host
                --net=host
                --memory="128m"
+               --log-opt max-size="{{ log_size }}"
                --restart=always
                --name="{{ filebeat.container_name }}"
                -v "{{ destdir }}/{{ filebeat.config_dir }}/{{ filebeat.config_file }}:/filebeat/filebeat.yml"

@@ -10,6 +10,7 @@
                --pid=host
                --net=host
                --memory="128m"
+               --log-opt max-size="{{ log_size }}"
                --restart=always
                --name "{{ ecsbeat.container_name }}"
                -v "{{ destdir }}/{{ ecsbeat.config_dir }}/{{ ecsbeat.config_file }}:/ecsbeat/ecsbeat.yml"

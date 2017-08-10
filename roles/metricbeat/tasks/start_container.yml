@@ -10,6 +10,7 @@
                --pid=host
                --net=host
                --memory="128m"
+               --log-opt max-size="{{ log_size }}"
                --restart=always
                --name "{{ metricbeat.container_name }}"
                -v "{{ destdir }}/{{ metricbeat.config_dir }}/{{ metricbeat.config_file }}:/metricbeat/metricbeat.yml"
