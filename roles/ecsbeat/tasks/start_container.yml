@@ -10,6 +10,7 @@
                --pid=host
                --net=host
                --memory="128m"
+               --restart=always
                --log-opt max-size="{{ log_size }}"
                --restart=always
                --name "{{ ecsbeat.container_name }}"
