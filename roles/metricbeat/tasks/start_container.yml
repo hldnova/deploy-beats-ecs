@@ -11,6 +11,8 @@
                --net=host
                --memory="128m"
                --restart=always
+               --log-opt max-size="{{ log_size }}"
+               --restart=always
                --name "{{ metricbeat.container_name }}"
                -v "{{ destdir }}/{{ metricbeat.config_dir }}/{{ metricbeat.config_file }}:/metricbeat/metricbeat.yml"
                -v "/var/run/docker.sock:/var/run/dockerhost/docker.sock"

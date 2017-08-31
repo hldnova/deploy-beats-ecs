@@ -17,6 +17,9 @@ tmpdir: /tmp
 # directoy to upload images on remote hosts
 destdir: /opt/beats
 
+# log file size
+log_size: 10M
+
 # container postfix
 postfix: ""
 

@@ -10,6 +10,8 @@
                --net=host
                --memory="128m"
                --restart=always
+               --log-opt max-size="{{ log_size }}"
+               --restart=always
                --name="{{ filebeat.container_name }}"
                -v "{{ destdir }}/{{ filebeat.config_dir }}/{{ filebeat.config_file }}:/filebeat/filebeat.yml"
                -v  "/var/log/messages:/var/log/syslog"
