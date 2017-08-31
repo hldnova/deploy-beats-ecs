@@ -18,7 +18,7 @@ filebeat:
         pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
         negate: true
         match: after
-      include_lines: ['RequestLog']
+      include_lines: ['RequestLog', 'ERROR', 'WARN']
 
     - 
       paths:
@@ -104,17 +104,17 @@ filebeat:
       fields:
         log_type: svcerrorlog
 
-    -
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc.log
-      tail_files: true
-      document_type: javalog
-      multiline:
-        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-        negate: true
-        match: after
-      fields:
-        log_type: blobsvclog
+    #-
+    #  paths:
+    #    - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc.log
+    #  tail_files: true
+    #  document_type: javalog
+    #  multiline:
+    #    pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+    #    negate: true
+    #    match: after
+    #  fields:
+    #    log_type: blobsvclog
 
     -
       paths:
