@@ -31,7 +31,7 @@ output:
 Execute the following commands to download docker images and deploy containers on ECS nodes
 
 ```bash
-# ansible-playbook ssh-key.yml --ask-pass
+# ansible-playbook ssh-keys.yml --ask-pass
 # sudo ansible-playbook upload-image.yml
 # ansible-playbook install.yml
 ```
