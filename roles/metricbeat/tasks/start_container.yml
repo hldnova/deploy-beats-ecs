@@ -1,8 +1,12 @@
 ---
 # cannot use docker module as ECS nodes does not have required dependencies
+- name: stop existing metricbeat container
+  ignore_errors: yes
+  command: docker stop  "{{ metricbeat.container_name }}"
+
 - name: remove existing metricbeat container
   ignore_errors: yes
-  command: docker rm -f "{{ metricbeat.container_name }}"
+  command: docker rm  "{{ metricbeat.container_name }}"
 
 - name: start docker container
   command: |
@@ -11,16 +15,14 @@
                --net=host
                --memory="128m"
                --restart=always
-               --log-opt max-size="{{ log_size }}"
-               --restart=always
+               --log-opt max-size="{{ metricbeat.log_size }}"
                --name "{{ metricbeat.container_name }}"
                -v "{{ destdir }}/{{ metricbeat.config_dir }}/{{ metricbeat.config_file }}:/metricbeat/metricbeat.yml"
                -v "/var/run/docker.sock:/var/run/dockerhost/docker.sock"
                -v "/opt/emc/caspian/fabric/agent/services/object/data:/data"
                -e LOGSTASH_HOSTS='{{ output.logstash.hosts }}'
-               -e ECS_CUSTOMER=$ECS_CUSTOMER
+               -e ECS_NODE_IP=$ECS_NODE_IP
                -e ECS_VDC_ID=$ECS_VDC_ID
                -e ECS_VDC_NAME=$ECS_VDC_NAME
-               -e ECS_NODE_IP=$ECS_NODE_IP
                "{{ images.metricbeat.image }}"
 
