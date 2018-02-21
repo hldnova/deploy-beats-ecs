@@ -41,6 +41,7 @@
 
 - name: copy filebeat image to remote nodes
   hosts: "{{ hosts | default('filebeat') }}"
+  gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_method: sudo
@@ -56,6 +57,7 @@
         
 - name: copy metricbeat image to remote nodes
   hosts: "{{ hosts | default('metricbeat') }}"
+  gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_method: sudo
@@ -72,6 +74,7 @@
 
 - name: copy ecsbeat image to remote node
   hosts: "{{ hosts | default('ecsbeat') }}"
+  gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_method: sudo
