@@ -8,6 +8,19 @@ filebeat:
       input_type: log
       document_type: restart
 
+    # access log for 3.1+
+    #-
+    #  paths:
+    #    - /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc-access.log
+    #  input_type: log
+    #  document_type: datahead_access
+    #  tail_files: true
+    #  multiline:
+    #    pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
+    #    negate: true
+    #    match: after
+
+    # access log for 3.0x
     -
       paths:
         - /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc.log
@@ -18,116 +31,7 @@ filebeat:
         pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
         negate: true
         match: after
-      include_lines: ['RequestLog', 'ERROR', 'WARN']
-
-    - 
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/*-gc-*.log.0.current
-      tail_files: true
-      document_type: svcgclog
-      multiline:
-        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-        negate: true
-        match: after
-      
-    -
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/vnest-perf-counter.log
-      tail_files: true
-      document_type: perfcounterlog
-      include_lines:
-        - 'vNest.getKV'
-        - 'vNest.listKV'
-        - 'vNest.insertKV'
-        - 'vNest.insertKVIfAbsent'
-        - 'vNest.batchExecKV'
-        - 'vNest.removeKV'
-        - 'BTree.getPageFromDisk'
-        - 'Chunk.journalWrite'
-
-    -
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/vnest.log
-      tail_files: true
-      document_type: javalog
-      multiline:
-        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-        negate: true
-        match: after
-      include_lines:
-        - 'BTree stats PageManager CacheStats'
-        - 'successfully dump'
-        - 'key in transition'
-        - 'Wait for write completion timed out'
-        - 'send UpdateGroupMembershipRequest'
-        - 'HeartBeatMonitor.*node'
-
-    -
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/btree-gc.log
-      tail_files: true
-      document_type: javalog
-      multiline:
-        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-        negate: true
-        match: after
-      include_lines: ['Total unserialized size of the tree']
-      fields:
-        log_type: btreegclog
-
-    -
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/georeceiver-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/ssm-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/btree-gc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/metering-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/stat-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/cm-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/nginx_error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/storageserver-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/provisionsvc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/transformsvc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/dtquery-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/resourcesvc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/eventsvc-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/rm-error.log
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/vnest-error.log
-      tail_files: true
-      max_bytes: 32700
-      document_type: svcerrorlog
-      multiline:
-        pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-        negate: true
-        match: after
-      fields:
-        log_type: svcerrorlog
-
-    #-
-    #  paths:
-    #    - /opt/emc/caspian/fabric/agent/services/object/main/log/blobsvc.log
-    #  tail_files: true
-    #  document_type: javalog
-    #  multiline:
-    #    pattern: "^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}"
-    #    negate: true
-    #    match: after
-    #  fields:
-    #    log_type: blobsvclog
-
-    -
-      paths:
-        - /opt/emc/caspian/fabric/agent/services/object/main/log/storageserver.log
-      tail_files: true
-      document_type: storageserverlog
-      multiline:
-        pattern: "^ [[:digit:]]{4}-"
-        negate: true
-        match: after
-      fields:
-        log_type: storageserverlog
-      include_lines: ['Resource consumption is over limits']
+      include_lines: ['RequestLog']
 
 fields_under_root: true
 fields:
