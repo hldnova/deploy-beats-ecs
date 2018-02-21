@@ -1,57 +1,77 @@
 ---
 
-- name: remove containers on ECS nodes
-  hosts: nodes
+- name: remove filebeat containers on ECS nodes
+  hosts: filebeat
+  gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_user: root
 
   tasks:
-    - name: remove metricbeat container
-      command: docker rm -f "{{ metricbeat.container_name }}"
+    - name: stop filebeat container
+      command: docker stop "{{ filebeat.container_name }}"
       ignore_errors: yes
-      tags: metricbeat
+      tags: filebeat
 
     - name: remove filebeat container
       command: docker rm -f "{{ filebeat.container_name }}"
       ignore_errors: yes
       tags: filebeat
 
-    - name: remove metricbeat image
-      command: docker rmi -f "{{ images.metricbeat.image }}"
-      ignore_errors: yes
-      tags: metricbeat
-
-    - name: remove filebeat image
-      command: docker rmi -f "{{ images.filebeat.image }}"
-      ignore_errors: yes
-      tags: filebeat
-
-    - name: remove metricbeat file
-      file: dest="{{ destdir }}/{{ metricbeat.config_dir }}" state=absent
-      tags: metricbeat
-
-    - name: remove filebeat file
-      file: dest="{{ destdir }}/{{ filebeat.config_dir }}" state=absent
-      tags: filebeat
-
-- name: Clean up ecsbeat
-  hosts: nodes-ecsbeat
+- name: remove metricbeat containers on ECS nodes
+  hosts: metricbeat
+  gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_user: root
 
   tasks:
+    - name: stop metricbeat container
+      command: docker stop "{{ metricbeat.container_name }}"
+      ignore_errors: yes
+      tags: metricbeat
+
+    - name: remove metricbeat container
+      command: docker rm  -f "{{ metricbeat.container_name }}"
+      ignore_errors: yes
+      tags: metricbeat
+
+- name: remove ecsbeat containers on ECS nodes
+  hosts: ecsbeat
+  gather_facts: no
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
+
+  tasks:
+    - name: stop ecsbeat container
+      command: docker stop "{{ ecsbeat.container_name }}"
+      ignore_errors: yes
+      tags: ecsbeat
+
     - name: remove ecsbeat container
       command: docker rm -f "{{ ecsbeat.container_name }}"
       ignore_errors: yes
       tags: ecsbeat
 
-    - name: remove ecsbeat image
-      command: docker rmi -f "{{ images.ecsbeat.image }}"
-      ignore_errors: yes
-      tags: ecsbeat
+- name: remove syslog config
+  hosts: syslog
+  gather_facts: no
+  user: "{{ ECS.ssh_user }}"
+  become: true
+  become_user: root
 
-    - name: remove ecsbeat file
-      file: dest="{{ destdir }}/{{ ecsbeat.config_dir }}" state=absent
-      tags: ecsbeat
+  tasks:
+    - name: remove syslog config
+      file: 
+        path: /etc/rsyslog.d/30-ecs-accesslog.conf
+        state: absent
+      tags: syslog
+
+    - name: Verify rsyslog service
+      service:
+        name: "{{ syslog.service_name }}"
+        state: started
+        enabled: yes
+      tags: syslog
+
