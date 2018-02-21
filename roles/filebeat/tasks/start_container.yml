@@ -1,7 +1,11 @@
 ---
+- name: stop existing filebeat container 
+  ignore_errors: yes
+  command: docker stop "{{ filebeat.container_name }}"
+
 - name: remove existing filebeat container 
   ignore_errors: yes
-  command: docker rm -f "{{ filebeat.container_name }}"
+  command: docker rm "{{ filebeat.container_name }}"
 
 - name: start docker container
   command: |
@@ -10,8 +14,7 @@
                --net=host
                --memory="128m"
                --restart=always
-               --log-opt max-size="{{ log_size }}"
-               --restart=always
+               --log-opt max-size="{{ filebeat.log_size }}"
                --name="{{ filebeat.container_name }}"
                -v "{{ destdir }}/{{ filebeat.config_dir }}/{{ filebeat.config_file }}:/filebeat/filebeat.yml"
                -v  "/var/log/messages:/var/log/syslog"
