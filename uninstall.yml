@@ -2,6 +2,7 @@
 
 - name: remove containers on ECS nodes
   hosts: all
+  gather_facts: no
   user: "{{ ECS.ssh_user }}"
   become: true
   become_user: root
