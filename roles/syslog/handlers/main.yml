@@ -1,0 +1,3 @@
+---
+- name: restart syslog
+  systemd: name={{ syslog.service_name }} state=restarted
