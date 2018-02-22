@@ -71,7 +71,7 @@
     - name: Verify rsyslog service
       service:
         name: "{{ syslog.service_name }}"
-        state: started
+        state: restarted
         enabled: yes
       tags: syslog
 
