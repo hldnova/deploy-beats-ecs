@@ -1,0 +1,82 @@
+---
+
+output:
+  logstash:
+    hosts: 10.1.1.1:5044
+    # for multiple logstash hosts, use
+    # hosts: 10.1.1.1:5044,10.1.1.2:5044
+
+  logstash_syslog:
+    host: 10.1.1.1
+
+  kafka:
+    # kafka brokers
+    hosts: 10.1.1.2:9092
+    # kafka topic for accesslog
+    kafka_accesslog_topic: accesslog
+
+ECS:
+  ssh_user: admin
+
+# -----
+  
+# directory to save downloaded images on localhost
+tmpdir: /tmp
+
+# directoy to upload images on remote hosts
+destdir: /opt/beats
+
+# container postfix
+postfix: ""
+
+images:
+  filebeat:
+    image: emccorp/docker-filebeat:5.2.0
+    filename: emccorp-filebeat-image
+
+  metricbeat:
+    image: emccorp/docker-metricbeat:5.2.0
+    filename: emccorp-metricbeat-image
+  
+  ecsbeat:
+    image: emccorp/docker-ecsbeat
+    filename: emccorp-ecsbeat-image
+
+metricbeat:
+  config_file: metricbeat.yml
+  config_dir: metricbeat{{ postfix }}
+  container_name: metricbeat{{ postfix }}
+  log_size: 10M
+
+filebeat:
+  config_file: filebeat.yml
+  config_dir: filebeat{{ postfix }}
+  container_name: filebeat{{ postfix }}
+  log_size: 10M
+
+ecsbeat:
+  config_file: ecsbeat.yml
+  config_dir: ecsbeat{{ postfix }}
+  container_name: ecsbeat{{ postfix }}
+  log_size: 10M
+
+syslog:
+  # set to ecs_access_legacy for legacy access log; ecs_access for 3.1+
+  state_file: ecs_access_legacy
+  #state_file: ecs_access
+
+  # set to true for legacy access log; others for 3.1+
+  access_legacy: true
+  #access_legacy: false
+
+  # set to 5015 for legacy access log; 5014 for 3.1+
+  port: 5015
+  #port: 5014
+
+  severity: info
+  facility: local7
+  config_dir: "/etc/rsyslog.d/"
+  service_name: "rsyslog"
+
+ecslogs:
+  object_main_log: /opt/emc/caspian/fabric/agent/services/object/main/log
