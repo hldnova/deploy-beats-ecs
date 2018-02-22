@@ -1,0 +1,26 @@
+
+filebeat:
+  # List of prospectors to fetch data.
+  prospectors:
+    -
+      paths:
+        - {{ ecslogs.object_main_log }}/dataheadsvc-access.log
+      tail_files: true
+      fields:
+        kafka_topic: {{ output.kafka.accesslog_topic }}
+
+fields_under_root: true
+fields:
+   ecs-node-ip: ${ECS_NODE_IP}
+   ecs-vdc-name: ${ECS_VDC_NAME}
+   ecs-vdc-id: ${ECS_VDC_ID}
+
+output:
+
+  ### kafka as output
+  kafka:
+    # kafka brokers
+    #hosts: ["localhost:5044"]
+    hosts: [LOGSTASH_HOSTS]
+    # kafka topic
+    topic: '%{[fields.kafka_topic]}'

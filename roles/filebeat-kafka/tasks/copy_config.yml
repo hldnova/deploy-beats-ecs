@@ -1,0 +1,9 @@
+---
+
+- name: create filebeat directory on remote nodes
+  file: path={{ destdir }}/{{ filebeat.config_dir }} state=directory mode=0755
+
+- name: configure filebeat
+  template:
+    src: "filebeat.yml.j2"
+    dest: "{{ destdir }}/{{ filebeat.config_dir }}/filebeat.yml"
