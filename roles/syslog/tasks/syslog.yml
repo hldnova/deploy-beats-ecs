@@ -1,0 +1,15 @@
+---
+- name: Config input file
+  template:
+    src: "{{ item }}"
+    dest: "{{ syslog.config_dir }}/{{ item | basename | regex_replace('\\.j2','') }}"
+  with_fileglob:
+    - "{{ role_path }}/templates/*.j2"
+  notify:
+    - restart syslog
+
+- name: Verify rsyslog service
+  service:
+    name: "{{ syslog.service_name }}"
+    state: started
+    enabled: yes
