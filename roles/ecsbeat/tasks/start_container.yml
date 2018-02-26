@@ -2,11 +2,11 @@
 
 - name: stop existing ecsbeat container
   ignore_errors: yes
-  command: docker stop "{{ ecsbeat.container_name }}"
+  command: docker stop "{{ ecsbeat.container_name }}-{{ ecsbeat_id }}"
 
 - name: remove existing ecsbeat container
   ignore_errors: yes
-  command: docker rm  "{{ ecsbeat.container_name }}"
+  command: docker rm  "{{ ecsbeat.container_name }}-{{ ecsbeat_id }}"
 
 - name: start docker container
   command: |
