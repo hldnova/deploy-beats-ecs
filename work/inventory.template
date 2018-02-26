@@ -42,6 +42,7 @@ ecs_vdc_id=vdc1_1234
 ecs_hosts=10.1.2.161:4443
 ecs_username=user
 ecs_password=pass
+ecsbeat_id=beat1
 
 [vdc2]
 10.1.21.205
@@ -60,3 +61,4 @@ ecs_vdc_id=vdc2_1234
 ecs_hosts=10.1.21.205:4443
 ecs_username=user
 ecs_password=pass
+ecsbeat_id=beat2
