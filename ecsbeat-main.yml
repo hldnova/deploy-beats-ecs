@@ -2,7 +2,7 @@
 
 - hosts: "{{ hosts | default('ecsbeat') }}"
   gather_facts: no
-  user: "{{ ECS.ssh_user }}"
+  user: "{{ ssh_user }}"
   become: true
   become_user: root
 
