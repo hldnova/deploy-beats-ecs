@@ -16,7 +16,7 @@
                --memory="128m"
                --restart=always
                --log-opt max-size="{{ ecsbeat.log_size }}"
-               --name "{{ ecsbeat.container_name }}"
+               --name "{{ ecsbeat.container_name }}-{{ ecsbeat_id }}"
                -v "{{ destdir }}/{{ ecsbeat.config_dir }}/{{ ecsbeat.config_file }}:/ecsbeat/ecsbeat.yml"
                -e LOGSTASH_HOSTS='{{ output.logstash.hosts }}'
                -e ECS_HOSTS='{{ ecs_hosts }}'
