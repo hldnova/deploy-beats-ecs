@@ -1,4 +1,11 @@
 # sample inventory
+[nodes:children]
+vdc1
+vdc2
+
+[nodes:vars]
+ssh_user=admin
+
 [filebeat:children]
 vdc1
 vdc2
@@ -10,6 +17,9 @@ vdc2
 [ecsbeat:children]
 vdc1-ecsbeat
 vdc2-ecsbeat
+
+[ecsbeat:vars]
+ssh_user=ubuntu
 
 [syslog:children]
 vdc1
