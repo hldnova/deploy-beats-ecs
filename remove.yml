@@ -39,18 +39,18 @@
 - name: remove ecsbeat containers on ECS nodes
   hosts: ecsbeat
   gather_facts: no
-  user: "{{ ECS.ssh_user }}"
+  user: "{{ ssh_user }}"
   become: true
   become_user: root
 
   tasks:
     - name: stop ecsbeat container
-      command: docker stop "{{ ecsbeat.container_name }}"
+      command: docker stop "{{ ecsbeat.container_name }}-{{ ecsbeat_id }}"
       ignore_errors: yes
       tags: ecsbeat
 
     - name: remove ecsbeat container
-      command: docker rm -f "{{ ecsbeat.container_name }}"
+      command: docker rm -f "{{ ecsbeat.container_name }}-{{ ecsbeat_id }}"
       ignore_errors: yes
       tags: ecsbeat
 
