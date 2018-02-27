@@ -4,7 +4,14 @@ filebeat:
   prospectors:
     -
       paths:
+{% if output.kafka.access_legacy %}
+        - {{ ecslogs.object_main_log }}/dataheadsvc.log
+      document_type: kafka_access_legacy
+      include_lines: ['RequestLog']
+{% else %}
         - {{ ecslogs.object_main_log }}/dataheadsvc-access.log
+      document_type: kafka_access
+{% endif %}
       tail_files: true
       fields:
         kafka_topic: {{ output.kafka.accesslog_topic }}
