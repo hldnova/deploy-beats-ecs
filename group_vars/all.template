@@ -7,7 +7,20 @@ output:
     # hosts: 10.1.1.1:5044,10.1.1.2:5044
 
   logstash_syslog:
+    # logstash host
     host: 10.1.1.1
+
+    # set to 5015 for legacy access log; 5014 for 3.1+
+    #port: 5014
+    port: 5015
+
+    # set to true for legacy access log
+    #access_legacy: false
+    access_legacy: true
+
+    # set to ecs_access_legacy for legacy access log
+    #state_file: ecs_access
+    state_file: ecs_access_legacy
 
   kafka:
     # kafka brokers
@@ -16,8 +29,8 @@ output:
     kafka_accesslog_topic: accesslog
 
     # set to true for legacy access log
-    access_legacy: false
-    #access_legacy: true
+    #access_legacy: false
+    access_legacy: true
 
 ECS:
   ssh_user: admin

@@ -6,7 +6,7 @@ $ModLoad imfile
 
 # The file being monitored. So far, this must be an absolute name (no macros or templates)
 #$InputFileName /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc-access.log
-{% if syslog.access_legacy %}
+{% if output.logstash_syslog.access_legacy %}
 $InputFileName {{ ecslogs.object_main_log}}/dataheadsvc.log
 :msg, contains, "RequestLog.java"
 {% else %}
@@ -21,7 +21,7 @@ $InputFileTag vdc_name={{ ecs_vdc_name }},vdc_id={{ ecs_vdc_id }}
 # directory (configurable via $WorkDirectory). Be careful to use unique names for different 
 # files being monitored. If there are duplicates, all sorts of “interesting” things may 
 # happen. Rsyslog currently does not check if a name is specified multiple times.
-$InputFileStateFile {{ syslog.state_file }}
+$InputFileStateFile {{ output.logstash_syslog.state_file }}
 
 # The syslog severity to be assigned to lines read. Can be specified in textual i
 # form (e.g. “info”, “warning”, …) or as numbers (e.g. 4 for “info”). Textual form is 
@@ -38,9 +38,9 @@ $InputFileFacility {{ syslog.facility }}
 $InputRunFileMonitor
 
 # Action. Send to remote server. @ UDP, @@ TCP
-{{ syslog.facility }}.* @@{{ output.logstash_syslog.host }}:{{ syslog.port }}
+{{ syslog.facility }}.* @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 
 # Don't process it further, e.g., not sending to other logs such as /var/log/messages.
-stop
+{{ syslog.facility }}.* stop
 
 
