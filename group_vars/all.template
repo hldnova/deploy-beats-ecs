@@ -78,18 +78,6 @@ ecsbeat:
   log_size: 10M
 
 syslog:
-  # set to ecs_access_legacy for legacy access log
-  state_file: ecs_access
-  #state_file: ecs_access_legacy
-
-  # set to true for legacy access log
-  access_legacy: false
-  #access_legacy: true
-
-  # set to 5015 for legacy access log; 5014 for 3.1+
-  port: 5014
-  #port: 5015
-
   severity: info
   facility: local7
   config_dir: "/etc/rsyslog.d/"
