@@ -5,7 +5,7 @@ Deploy collectors (aka shippers, beaters) to ECS nodes.
 # Prerequsite
 Set up ELK stack: https://github.com/hldnova/elastic-docker
 
-Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK host.
+Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access ports configured for logstash input plugin, e.g., 5014. 
 
 # Setup
 1. Install [Docker](http://docker.io)
