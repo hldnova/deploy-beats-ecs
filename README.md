@@ -1,66 +1,93 @@
 # Deploy beats to ECS nodes
 
-Deploy filebeat, metricbeat to ECS nodes, and optionally deploy ecsbeat to a node either in the ECS cluster or somewhere else.
+Deploy collectors (aka shippers, beaters) to ECS nodes.
+
+# Prerequsite
+Set up ELK stack: https://github.com/hldnova/elastic-docker
+
+Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK host.
 
 # Setup
 1. Install [Docker](http://docker.io)
 2. Install [Ansible](http://docs.ansible.com/ansible/intro_installation.html)
 3. Install [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-4. Clone this repository
+4. Clone this repository: git clone https://github.com/hldnova/ecs-collector
 
+# Deploy Syslog Collector to ECS nodes
+Deploy syslog configurations to ECS nodes to collect ECS access logs via syslog.
 
-# Deploy beats to ECS nodes
-Deploy filebeat and metricbeat containers on ECS nodes. The filebeat is configured to collect dataheadsvc.log. The metricbeat collects system and docker metric sets. The ecsbeat will be deployed to one ECS node.
+## Configure Inventory
+```bash
+$ cd ecs-collector
+```
 
-Make sure ECS nodes can be accessed via ssh, and the nodes themselves can access port 5044 on the ELK stack.
+Edit work/inventory to specify ECS nodes, vdc.
+```bash
+[nodes:children]
+vdc1
+vdc2
 
-Optionally, Edit ansible.cfg.
+[nodes:vars]
+ssh_user=admin
 
-Edit work/inventory to specify ECS nodes, vdc, and ECS credentials. Filebeat and metricbeat are deploy on all the nodes. Ecsbeat should be deploy on one node per vdc.
+[syslog:children]
+vdc1
+vdc2
 
-Edit group_vars/all to configure logstash hosts and ECS credentials
+[vdc1]
+10.1.1.1
+10.1.1.2
+10.1.1.3
+10.1.1.4
+
+[vdc2]
+10.1.1.11
+10.1.1.12
+10.1.1.13
+10.1.1.14
+```
+
+## Configure Logstash Output
+
+Edit group_vars/all to configure logstash hosts, assuming 10.3.1.1 is the ELK host where logstash is running.
 ```bash
 output:
-  logstash:
-    hosts: 10.3.1.1:5044
-    # for multiple logstash hosts, use
-    # hosts: 10.3.1.1:5044,10.3.2.2:5044
+  logstash_syslog:
+    host: 10.3.1.1
 
+    # set to 5015 for legacy access log; 5014 for 3.1+
+    port: 5014
+    #port: 5015
+
+    # set to true for legacy access log
+    access_legacy: false
+    #access_legacy: true
+
+    # set to ecs_access_legacy for legacy access log
+    state_file: ecs_access
+    #state_file: ecs_access_legacy
 ```
 
-Execute the following commands to download docker images and deploy containers on ECS nodes
+## Deploy Syslog Configuration to ECS nodes
 
+Run the commands below to deploy syslog configurations to ECS nodes. You will be prompted to enter password for the ECS admin user.
 ```bash
-# ansible-playbook ssh-keys.yml --ask-pass
-# sudo ansible-playbook upload-image.yml
-# ansible-playbook install.yml
+$ ansible-playbook ssh-keys.yml --ask-pass
+$ ansible-playbook syslog-main.yml
 ```
 
-Log on to an ECS node to verify filebeat and metricbeat containers are running. 
+Log on to an ECS node to verify that syslog configuration has been deployed. 
 ```bash
-# sudo docker logs filebeat
-# sudo docker logs metricbeat
+$ ls /etc/rsyslog.d
+30-ecs-accesslog.conf
 ```
 
-To verify your data are present in Elasticsearch, issue the following commands. You many need to adjust the index patterns depending on how your ELK stack is configured.
+Shortly after, you should see data in Elasticsearch. To verify run the following command.
 ```bash
-# curl -XGET http://<your_elasticsearch_host>:9200/filebeat-*/_search?pretty
-# curl -XGET http://<your_elasticsearch_host>:9200/metricbeat-*/_search?pretty
+$ curl -XGET http://<your_elk_host>:9200/filebeat-*/_search?pretty
 ```
 
-You can also run the individual playbook to, e.g., restart ecsbeat
+To remove the syslog configuration from ECS nodes
 ```bash
-# ansible-playbook ecsbeat-main.yml
+$ ansible-playbook remove.yml --tags=syslog
 ```
-
-To remove all the deployed beats
-```bash
-# ansible-playbook uninstall.yml
-```
-
-To remove just, e.g., ecsbeat
-```bash
-# ansible-playbook --tags=ecsbeat uninstall.yml
-```
-
-You will need to re-run the upload-image.yml playbook if you want to get latest docker images
