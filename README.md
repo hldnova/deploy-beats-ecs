@@ -34,6 +34,12 @@ ssh_user=admin
 vdc1
 vdc2
 
+[vdc1:vars]
+ecs_vdc_name=vdc1
+
+[vdc2:vars]
+ecs_vdc_name=vdc2
+
 [vdc1]
 10.1.1.1
 10.1.1.2
