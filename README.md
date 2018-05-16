@@ -1,4 +1,4 @@
-# Deploy beats to ECS nodes
+# Deploy Collectors to ECS nodes
 
 Deploy collectors (aka shippers, beaters) to ECS nodes.
 
