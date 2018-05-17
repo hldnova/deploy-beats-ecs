@@ -1,0 +1,31 @@
+
+module(
+    load="imfile"
+    PollingInterval="10"
+)
+
+ruleset(name="forward") {
+    action(
+        type="omfwd"
+        Target="10.247.134.61"
+        Port="5015"
+        Protocol="udp"
+    )
+}
+
+ruleset(name="ecs_access_logs") {
+    if ($msg contains 'RequestLog.java') then {
+        call forward
+        stop
+   }
+}
+
+input(
+    type="imfile" ruleset="ecs_access_logs"
+    File="/opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc.log"
+    Tag="vdc_name=vdc1"
+    Severity="local7"
+    Facility="local7"
+    StateFile="ecs_access_legacy"
+)
+

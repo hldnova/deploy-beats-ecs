@@ -1,0 +1,32 @@
+#$DebugFile /home/admin/rsyslog.debug
+#$DebugLevel 2
+
+module(
+    load="imfile"
+    PollingInterval="10"
+)
+
+ruleset(name="forward") {
+    action(
+        type="omfwd"
+        Target="10.1.1.1"
+        Port="5014"
+        Protocol="udp"
+    )
+}
+
+ruleset(name="ecs_access_logs") {
+    call forward
+    stop
+}
+
+input(
+    type="imfile" ruleset="ecs_access_logs"
+    File="/opt/emc/caspian/fabric/agent/services/object/main/log/datahead-access.log"
+    Tag="vdc_name=vdc1"
+    Severity="local7"
+    Facility="local7"
+    StateFile="ecs_access"
+
+)
+

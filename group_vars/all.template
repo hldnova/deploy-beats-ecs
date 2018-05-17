@@ -18,10 +18,9 @@ output:
     #access_legacy: false
     access_legacy: true
 
-    # set to ecs_access_legacy for legacy access log
-    #state_file: ecs_access
-    state_file: ecs_access_legacy
-
+    # syslog protocol
+    protocol: udp
+  
   kafka:
     # kafka brokers
     hosts: 10.1.1.2:9092
@@ -85,3 +84,5 @@ syslog:
 
 ecslogs:
   object_main_log: /opt/emc/caspian/fabric/agent/services/object/main/log
+  access_log: datahead-access.log
+
