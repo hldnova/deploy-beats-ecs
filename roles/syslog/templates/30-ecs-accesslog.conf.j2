@@ -1,46 +1,24 @@
 #$DebugFile /home/admin/rsyslog.debug
 #$DebugLevel 2
 
-# Load text file input module
 $ModLoad imfile
-
-# The file being monitored. So far, this must be an absolute name (no macros or templates)
-#$InputFileName /opt/emc/caspian/fabric/agent/services/object/main/log/dataheadsvc-access.log
+$InputFileTag vdc_name={{ ecs_vdc_name }},vdc_id={{ ecs_vdc_id }}
+$InputFileSeverity {{ syslog.severity }}
+$InputFileFacility {{ syslog.facility }}
+$InputRunFileMonitor
 {% if output.logstash_syslog.access_legacy %}
+$InputFileStateFile ecs-legacy-access
 $InputFileName {{ ecslogs.object_main_log}}/dataheadsvc.log
-:msg, contains, "RequestLog.java"
+# @@ for tcp, @ for udp
+:msg, contains, "RequestLog.java" @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 {% else %}
+$InputFileStateFile ecs-access
 $InputFileName {{ ecslogs.object_main_log}}/dataheadsvc-access.log
+# @@ for tcp, @ for udp
+local7.* @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 {% endif %}
 
-# The tag to be used for messages that originate from this file
-$InputFileTag vdc_name={{ ecs_vdc_name }},vdc_id={{ ecs_vdc_id }}
-
-# Rsyslog must keep track of which parts of the to be monitored file it already processed.
-# This is done in the state file. This file always is created in the rsyslog working 
-# directory (configurable via $WorkDirectory). Be careful to use unique names for different 
-# files being monitored. If there are duplicates, all sorts of “interesting” things may 
-# happen. Rsyslog currently does not check if a name is specified multiple times.
-$InputFileStateFile {{ output.logstash_syslog.state_file }}
-
-# The syslog severity to be assigned to lines read. Can be specified in textual i
-# form (e.g. “info”, “warning”, …) or as numbers (e.g. 4 for “info”). Textual form is 
-# suggested. Default is “notice”
-$InputFileSeverity {{ syslog.severity }}
-
-# The syslog facility to be assigned to lines read. Can be specified in textual 
-# form (e.g. “local0”, “local1”, …) or as numbers (e.g. 128 for “local0”). 
-# Textual form is suggested. Default  is “local0”.
-$InputFileFacility {{ syslog.facility }}
-
-# This activates the current monitor. It has no parameters. If you forget this directive, 
-# no file monitoring will take place.
-$InputRunFileMonitor
-
-# Action. Send to remote server. @ UDP, @@ TCP
-{{ syslog.facility }}.* @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
-
-# Don't process it further, e.g., not sending to other logs such as /var/log/messages.
-{{ syslog.facility }}.* stop
+# Don't process it further, e.g., not sending to other logs such as /var/log/localmessages.
+#{{ syslog.facility }}.* stop
 
 
