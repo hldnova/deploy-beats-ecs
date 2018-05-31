@@ -33,7 +33,6 @@ vdc2
 
 [vdc1:vars]
 ecs_vdc_name=vdc1
-ecs_vdc_id=vdc1_1234
 
 [vdc1-ecsbeat]
 10.1.2.161
@@ -52,7 +51,6 @@ ecsbeat_id=beat1
 
 [vdc2:vars]
 ecs_vdc_name=vdc2
-ecs_vdc_id=vdc2_1234
 
 [vdc2-ecsbeat]
 10.1.21.205

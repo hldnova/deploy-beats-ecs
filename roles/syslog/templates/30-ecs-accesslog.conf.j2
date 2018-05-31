@@ -2,23 +2,22 @@
 #$DebugLevel 2
 
 $ModLoad imfile
-$InputFileTag vdc_name={{ ecs_vdc_name }},vdc_id={{ ecs_vdc_id }}
+{% if output.logstash_syslog.access_legacy %}
+$InputFileName {{ ecslogs.object_main_log}}/dataheadsvc.log
+$InputFileStateFile ecs-legacy-access
+{% else %}
+$InputFileStateFile ecs-access
+$InputFileName {{ ecslogs.object_main_log}}/dataheadsvc-access.log
+{% endif %}
+$InputFileTag {{ ecs_vdc_name }}
 $InputFileSeverity {{ syslog.severity }}
 $InputFileFacility {{ syslog.facility }}
 $InputRunFileMonitor
 {% if output.logstash_syslog.access_legacy %}
-$InputFileStateFile ecs-legacy-access
-$InputFileName {{ ecslogs.object_main_log}}/dataheadsvc.log
-# @@ for tcp, @ for udp
 :msg, contains, "RequestLog.java" @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 {% else %}
-$InputFileStateFile ecs-access
-$InputFileName {{ ecslogs.object_main_log}}/dataheadsvc-access.log
-# @@ for tcp, @ for udp
 local7.* @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 {% endif %}
 
 # Don't process it further, e.g., not sending to other logs such as /var/log/localmessages.
 #{{ syslog.facility }}.* stop
-
-
