@@ -18,9 +18,6 @@ output:
     #access_legacy: false
     access_legacy: true
 
-    # syslog protocol
-    protocol: udp
-  
   kafka:
     # kafka brokers
     hosts: 10.1.1.2:9092

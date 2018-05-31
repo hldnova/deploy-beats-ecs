@@ -1,46 +1,23 @@
 #$DebugFile /home/admin/rsyslog.debug
 #$DebugLevel 2
 
-module(
-    load="imfile"
-    PollingInterval="10"
-)
-
-ruleset(name="forward") {
-    action(
-        type="omfwd"
-        Target="{{ output.logstash_syslog.host }}"
-        Port="{{ output.logstash_syslog.port }}"
-        Protocol="{{ output.logstash_syslog.protocol }}"
-    )
-}
-
-ruleset(name="ecs_access_logs") {
+$ModLoad imfile
 {% if output.logstash_syslog.access_legacy %}
-    if ($msg contains 'RequestLog.java') then {
-        call forward
-        stop
-   }
+$InputFileName {{ ecslogs.object_main_log}}/dataheadsvc.log
+$InputFileStateFile ecs-legacy-access
 {% else %}
-    call forward
-    stop
+$InputFileStateFile ecs-access
+$InputFileName {{ ecslogs.object_main_log}}/dataheadsvc-access.log
 {% endif %}
-}
-
-input(
-    type="imfile" ruleset="ecs_access_logs"
+$InputFileTag {{ ecs_vdc_name }}
+$InputFileSeverity {{ syslog.severity }}
+$InputFileFacility {{ syslog.facility }}
+$InputRunFileMonitor
 {% if output.logstash_syslog.access_legacy %}
-    File="{{ ecslogs.object_main_log}}/dataheadsvc.log"
+:msg, contains, "RequestLog.java" @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 {% else %}
-    File="{{ ecslogs.object_main_log}}/{{ ecslogs.access_log }}"
-{% endif %}
-    Tag="vdc_name={{ ecs_vdc_name }}"
-    Severity="{{ syslog.facility }}"
-    Facility="{{ syslog.facility }}"
-{% if output.logstash_syslog.access_legacy %}
-    StateFile="ecs_access_legacy"
-{% else %}
-    StateFile="ecs_access"
+local7.* @@{{ output.logstash_syslog.host }}:{{ output.logstash_syslog.port }}
 {% endif %}
 
-)
+# Don't process it further, e.g., not sending to other logs such as /var/log/localmessages.
+#{{ syslog.facility }}.* stop
