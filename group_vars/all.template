@@ -11,12 +11,12 @@ output:
     host: 10.1.1.1
 
     # set to 5015 for legacy access log; 5014 for 3.1+
-    #port: 5014
-    port: 5015
+    port: 5014
+    #port: 5015
 
     # set to true for legacy access log
-    #access_legacy: false
-    access_legacy: true
+    access_legacy: false
+    #access_legacy: true
 
   kafka:
     # kafka brokers
